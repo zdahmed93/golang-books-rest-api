@@ -5,6 +5,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -37,7 +38,7 @@ func main() {
 
 	// Route handlers & endpoints
 	router.HandleFunc("/books", getBooks).Methods("GET")
-	// router.HandleFunc("/books/{id}", getBook).Methods("GET")
+	router.HandleFunc("/books/{id}", getBook).Methods("GET")
 	// router.HandleFunc("/books", createBook).Methods("POST")
 	// router.HandleFunc("/books/{id}", updateBook).Methods("PUT")
 	// router.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
@@ -59,4 +60,19 @@ func testAPI(w http.ResponseWriter, r *http.Request) {
 func getBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(books)
+}
+
+// Get single book
+func getBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r) // Gets params
+	fmt.Println("params: ", params)
+	// Loop through books and find one with the id from the params
+	for _, item := range books {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	// json.NewEncoder(w).Encode(&Book{})
 }
