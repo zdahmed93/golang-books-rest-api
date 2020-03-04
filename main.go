@@ -36,7 +36,7 @@ func main() {
 	books = append(books, Book{ID: "2", Title: "Les miserables", Author: &Writer{FirstName: "Victor", LastName: "Hugo"}})
 
 	// Route handlers & endpoints
-	// router.HandleFunc("/books", getBooks).Methods("GET")
+	router.HandleFunc("/books", getBooks).Methods("GET")
 	// router.HandleFunc("/books/{id}", getBook).Methods("GET")
 	// router.HandleFunc("/books", createBook).Methods("POST")
 	// router.HandleFunc("/books/{id}", updateBook).Methods("PUT")
@@ -53,4 +53,10 @@ func main() {
 func testAPI(w http.ResponseWriter, r *http.Request) {
 	// w.Write("all right")
 	json.NewEncoder(w).Encode("all right")
+}
+
+// Get all books
+func getBooks(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(books)
 }
