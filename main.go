@@ -43,7 +43,7 @@ func main() {
 	router.HandleFunc("/books/{id}", getBook).Methods("GET")
 	router.HandleFunc("/books", createBook).Methods("POST")
 	router.HandleFunc("/books/{id}", updateBook).Methods("PUT")
-	// router.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
+	router.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
 
 	// Start the server
 	// http.ListenAndServe(":5000", router)
@@ -105,4 +105,18 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+}
+
+// Delete book
+func deleteBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	var newBooks []Book
+	for _, item := range books {
+		if item.ID != params["id"] {
+			newBooks = append(newBooks, item)
+		}
+	}
+	books = newBooks
+	json.NewEncoder(w).Encode(books)
 }
