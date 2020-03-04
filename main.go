@@ -7,7 +7,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -39,7 +41,7 @@ func main() {
 	// Route handlers & endpoints
 	router.HandleFunc("/books", getBooks).Methods("GET")
 	router.HandleFunc("/books/{id}", getBook).Methods("GET")
-	// router.HandleFunc("/books", createBook).Methods("POST")
+	router.HandleFunc("/books", createBook).Methods("POST")
 	// router.HandleFunc("/books/{id}", updateBook).Methods("PUT")
 	// router.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
 
@@ -75,4 +77,14 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	// json.NewEncoder(w).Encode(&Book{})
+}
+
+// Add new book
+func createBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var book Book
+	_ = json.NewDecoder(r.Body).Decode(&book)
+	book.ID = strconv.Itoa(rand.Intn(100000000)) // Mock ID - not safe
+	books = append(books, book)
+	json.NewEncoder(w).Encode(book)
 }
